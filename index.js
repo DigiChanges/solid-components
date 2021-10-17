@@ -1,4 +1,4 @@
 // Atoms
-export { default as Select } from './atoms/Select'
 
 // Molecules
+export { default as Multiselect } from './molecules/Multiselect'
