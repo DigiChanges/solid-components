@@ -1,4 +1,4 @@
-import { createSignal, mergeProps, splitProps } from 'solid-js';
+import { createEffect, createSignal, mergeProps, splitProps, onMount } from 'solid-js';
 import './Multiselect.css';
 
 const defaultProps = {
@@ -12,7 +12,7 @@ const defaultProps = {
     placeholder: 'select'
 };
 
-export const Multiselect = ( props ) =>
+export const Multiselect = ( props: any ) =>
 {
     props = mergeProps( defaultProps, props );
     const [ local, others ] = splitProps( props, [ 'placeholder', 'style', 'singleSelect', 'id', 'hidePlaceholder', 'disable', 'showArrow', 'avoidHighlightFirstOption' ] );
@@ -121,7 +121,11 @@ export const Multiselect = ( props ) =>
             }
             setOptions( optionList );
             setFilteredOptions( optionList );
-            filterOptionsByInput();
+            // TODO: Fix wait
+            setTimeout( () =>
+            {
+                filterOptionsByInput();
+            }, 0 );
             return;
         }
         const optionList = unfilteredOptions().filter(
@@ -130,8 +134,61 @@ export const Multiselect = ( props ) =>
 
         setOptions( optionList );
         setFilteredOptions( optionList );
-        filterOptionsByInput();
+        // TODO: Fix wait
+        setTimeout( () =>
+        {
+            filterOptionsByInput();
+        }, 0 );
     };
+
+    const initialSetValue = () =>
+    {
+
+        if ( !props.showCheckbox && !props.singleSelect )
+        {
+            removeSelectedValuesFromOptions( false );
+        }
+
+        // if (props.groupBy) {
+        //     groupByOptions(options());
+        // }
+    };
+
+    createEffect( ( prevOptions ) =>
+    {
+        if ( JSON.stringify( prevOptions ) !== JSON.stringify( props.options ) )
+        {
+            setOptions( props.options );
+            setFilteredOptions( props.options );
+            setUnfilteredOptions( props.options );
+            // TODO: Fix wait
+            setTimeout( () =>
+            {
+                initialSetValue();
+            }, 0 );
+        }
+        return props.options;
+    }, props.options );
+
+    createEffect( ( prevSelectedvalues ) =>
+    {
+        if ( JSON.stringify( prevSelectedvalues ) !== JSON.stringify( props.selectedValues ) )
+        {
+            setSelectedValues( Object.assign( [], props.selectedValues ) );
+            setPreSelectedValues( Object.assign( [], props.selectedValues ) );
+            // TODO: Fix wait
+            setTimeout( () =>
+            {
+                initialSetValue();
+            }, 0 );
+        }
+        return props.selectedValues;
+    }, props.selectedValues );
+
+    onMount( () =>
+    {
+        initialSetValue();
+    } );
 
     const onSingleSelect = ( item ) =>
     {
@@ -298,7 +355,11 @@ export const Multiselect = ( props ) =>
     const onInput = ( event ) =>
     {
         setInputValue( event.target.value );
-        filterOptionsByInput();
+        // TODO: Fix wait setInputValue
+        setTimeout( () =>
+        {
+            filterOptionsByInput();
+        }, 0 );
         if ( props.onSearch )
         {
             props.onSearch( event.target.value );
