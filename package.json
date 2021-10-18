@@ -20,7 +20,15 @@
   },
   "author": "Leonardo Casales <leonardo@digichanges.com>",
   "license": "MIT",
-  "peerDependencies": {
-    "solid-js": "^1.1.3"
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.1",
+    "eslint-plugin-solid": "^0.1.2"
+  },
+  "peerDependencies": {},
+  "dependencies": {
+    "solid-js": "^1.1.3",
+    "typescript": "^4.4.4"
   }
 }
