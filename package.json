@@ -1,7 +1,7 @@
 {
   "name": "@digichanges/solid-components",
   "version": "0.0.2",
-  "main": "index.js",
+  "main": "index.ts",
   "private": false,
   "repository": {
     "type": "git",
