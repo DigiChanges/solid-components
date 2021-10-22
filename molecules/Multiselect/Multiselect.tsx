@@ -499,7 +499,6 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
             id={id || 'multiselectContainerSolid'}
             style={style['multiselectContainer']}
         >
-            <h1>TEST</h1>
             <div class={classNames( 'search-wrapper searchWrapper', { singleSelect } )}
                 ref={searchWrapper} style={style['searchBox']}
                 onClick={singleSelect ? toggelOptionList : () =>
