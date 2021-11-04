@@ -80,7 +80,7 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
     const [ closeIconType, setCloseIconType ] = createSignal( closeIconTypes[props.closeIcon] || closeIconTypes['circle'] );
 
 
-    let optionTimeout: number;
+    let optionTimeout: NodeJS.Timeout;
     let searchBox: HTMLInputElement;
     const searchWrapper = ( el: HTMLInputElement ) => el.addEventListener( 'click', listenerCallback );
 
@@ -554,5 +554,3 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
 
     return renderMultiselectContainer();
 };
-
-export default Multiselect;

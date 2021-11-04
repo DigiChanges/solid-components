@@ -1,11 +1,19 @@
 {
   "name": "@digichanges/solid-components",
-  "version": "0.0.6",
-  "main": "index.ts",
+  "version": "0.0.7",
   "private": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/digichanges/solid-components.git"
+  },
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/es/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/es/index.js"
+    }
   },
   "engines": {
     "node": ">=15.0.0",
@@ -21,25 +29,32 @@
     "access": "public"
   },
   "scripts": {
-    "build": "rimraf ./lib/* && tsc -p ."
+    "build:r": "rollup -c",
+    "build:component": "rollup -c",
+    "build": "yarn build:babel && yarn build:types",
+    "build:babel": "NODE_ENV=production npx babel --extensions '.ts,.tsx' ./ --out-dir ./dist/esm --source-maps",
+    "build:babel:watch": "NODE_ENV=production npx babel --extensions '.ts,.tsx' ./ --out-dir ./dist/esm --source-maps --watch",
+    "build:types": "tsc --jsx preserve index.ts --sourceMap --outDir dist/types --declaration --emitDeclarationOnly",
+    "build:types:watch": "tsc --jsx preserve index.ts --sourceMap --outDir dist/types --declaration --emitDeclarationOnly --watch",
+    "prepublishOnly": "yarn build:r"
   },
   "author": "DigiChanges <https://www.linkedin.com/company/digichanges>",
   "license": "MIT",
-  "babel": {
-    "presets": [
-      "babel-preset-solid",
-      "@babel/preset-typescript"
-    ],
-    "plugins": []
-  },
   "devDependencies": {
-    "@babel/core": "^7.15.8",
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
     "@babel/preset-typescript": "^7.16.0",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-typescript": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "babel-preset-solid": "^1.2.2",
     "eslint": "^8.0.1",
     "eslint-plugin-solid": "^0.1.2",
+    "rollup": "^2.59.0",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-import-css": "^3.0.2",
     "typescript": "^4.4.4"
   },
   "peerDependencies": {
