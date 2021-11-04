@@ -27,12 +27,6 @@ export default {
             format: 'es',
             preserveModules: true,
             entryFileNames: 'es/[name].js'
-        },
-        {
-            dir: './dist',
-            format: 'cjs',
-            preserveModules: true,
-            entryFileNames: 'cjs/[name].js'
         }
     ],
     plugins: [

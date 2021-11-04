@@ -1,17 +1,15 @@
 {
   "name": "@digichanges/solid-components",
-  "version": "0.0.81",
+  "version": "0.0.83",
   "private": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/digichanges/solid-components.git"
   },
-  "main": "./dist/cjs/index.js",
   "module": "./dist/es/index.js",
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/cjs/index.js",
       "default": "./dist/es/index.js"
     }
   },
