@@ -74,6 +74,3 @@ function _nonIterableRest() {
 }
 
 export { _arrayLikeToArray as arrayLikeToArray, _arrayWithHoles as arrayWithHoles, _arrayWithoutHoles as arrayWithoutHoles, _iterableToArray as iterableToArray, _iterableToArrayLimit as iterableToArrayLimit, _nonIterableRest as nonIterableRest, _nonIterableSpread as nonIterableSpread, _slicedToArray as slicedToArray, _toConsumableArray as toConsumableArray, _unsupportedIterableToArray as unsupportedIterableToArray };
-Array = _slicedToArray;
-exports.toConsumableArray = _toConsumableArray;
-exports.unsupportedIterableToArray = _unsupportedIterableToArray;

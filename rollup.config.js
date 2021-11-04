@@ -4,7 +4,7 @@ import fs from 'fs';
 import babel from '@rollup/plugin-babel';
 import typescript from '@rollup/plugin-typescript';
 import del from 'rollup-plugin-delete';
-import css from 'rollup-plugin-import-css';
+import styles from 'rollup-plugin-styles';
 
 const yalcPublisher = () =>
     process.argv.includes( '--yalc' )
@@ -23,10 +23,11 @@ export default {
     external: id => !( id.startsWith( '.' ) || id.startsWith( '/' ) ),
     output: [
         {
-            dir: './dist',
+            dir: './dist/src',
             format: 'es',
             preserveModules: true,
             entryFileNames: 'es/[name].js'
+            // assetFileNames: '[name]-[hash][extname]'
         }
     ],
     plugins: [
@@ -35,15 +36,10 @@ export default {
         babel( {
             extensions: [ '.ts', '.tsx' ],
             babelHelpers: 'bundled',
-            presets: [ 'solid' ]
+            presets: [ 'solid' ],
+            exclude: 'node_modules/**'
         } ),
-        {
-            writeBundle ()
-            {
-                fs.writeFileSync( './dist/es/package.json', JSON.stringify( { type: 'module' }, null, '  ' ) );
-            }
-        },
         yalcPublisher(),
-        css()
+        styles()
     ]
 };

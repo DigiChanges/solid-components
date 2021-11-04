@@ -510,44 +510,47 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
     function renderMultiselectContainer ()
     {
         return (
-            <div class={classNames( 'multiselect-container multiSelectContainer', { disable_ms : disable } )}
-                id={id || 'multiselectContainerSolid'}
-                style={style['multiselectContainer']}
-            >
-                <div class={classNames( 'search-wrapper searchWrapper', { singleSelect } )}
-                    ref={searchWrapper} style={style['searchBox']}
-                    onClick={singleSelect ? toggelOptionList : () =>
-                    { }}
+            <>
+                <h1>test</h1>
+                <div class={classNames( 'multiselect-container multiSelectContainer', { disable_ms : disable } )}
+                    id={id || 'multiselectContainerSolid'}
+                    style={style['multiselectContainer']}
                 >
-                    {renderSelectedList()}
-                    <input
-                        type="text"
-                        ref={searchBox}
-                        class="searchBox"
-                        id={`${id || 'search'}_input`}
-                        onInput={onInput}
-                        value={inputValue()}
-                        onFocus={onFocus}
-                        onBlur={onBlur}
-                        placeholder={( ( singleSelect && selectedValues().length ) || ( hidePlaceholder && selectedValues().length ) ) ? '' : placeholder}
-                        onKeyDown={onArrowKeyNavigation}
-                        style={style['inputField']}
-                        // autoComplete="off"
-                        disabled={singleSelect || disable}
-                    />
-                    {( singleSelect || showArrow ) &&
+                    <div class={classNames( 'search-wrapper searchWrapper', { singleSelect } )}
+                        ref={searchWrapper} style={style['searchBox']}
+                        onClick={singleSelect ? toggelOptionList : () =>
+                        { }}
+                    >
+                        {renderSelectedList()}
+                        <input
+                            type="text"
+                            ref={searchBox}
+                            class="searchBox"
+                            id={`${id || 'search'}_input`}
+                            onInput={onInput}
+                            value={inputValue()}
+                            onFocus={onFocus}
+                            onBlur={onBlur}
+                            placeholder={( ( singleSelect && selectedValues().length ) || ( hidePlaceholder && selectedValues().length ) ) ? '' : placeholder}
+                            onKeyDown={onArrowKeyNavigation}
+                            style={style['inputField']}
+                            // autoComplete="off"
+                            disabled={singleSelect || disable}
+                        />
+                        {( singleSelect || showArrow ) &&
                     <img
                         src={DownArrow}
                         class="icon_cancel icon_down_dir"
                     />
-                    }
+                        }
+                    </div>
+                    <div
+                        class={classNames( 'optionListContainer',  { displayBlock : toggleOptionsList(), displayNone: !toggleOptionsList() } )}
+                    >
+                        {renderOptionList()}
+                    </div>
                 </div>
-                <div
-                    class={classNames( 'optionListContainer',  { displayBlock : toggleOptionsList(), displayNone: !toggleOptionsList() } )}
-                >
-                    {renderOptionList()}
-                </div>
-            </div>
+            </>
         );
     }
 

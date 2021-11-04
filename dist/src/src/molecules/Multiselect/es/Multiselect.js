@@ -1,7 +1,8 @@
 import { template, delegateEvents, setAttribute, addEventListener, insert, effect, style, memo, createComponent, For } from 'solid-js/web';
-import { slicedToArray as _slicedToArray, toConsumableArray as _toConsumableArray } from '../../../_virtual/_rollupPluginBabelHelpers.js';
+import { slicedToArray as _slicedToArray, toConsumableArray as _toConsumableArray } from '../../../../_virtual/_rollupPluginBabelHelpers.js';
 import { mergeProps, splitProps, createSignal, createEffect, onMount } from 'solid-js';
 import classNames from 'classnames';
+import './Multiselect2.js';
 
 const _tmpl$ = template(`<div>not implemented</div>`, 2),
       _tmpl$2 = template(`<span class="notFound"></span>`, 2),
@@ -11,8 +12,9 @@ const _tmpl$ = template(`<div>not implemented</div>`, 2),
       _tmpl$6 = template(`<span></span>`, 2),
       _tmpl$7 = template(`<img class="icon_cancel closeIcon">`, 1),
       _tmpl$8 = template(`<i class="custom-close"></i>`, 2),
-      _tmpl$9 = template(`<div><div><input type="text" class="searchBox"></div><div></div></div>`, 7),
-      _tmpl$10 = template(`<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png" class="icon_cancel icon_down_dir">`, 1);
+      _tmpl$9 = template(`<h1>test</h1>`, 2),
+      _tmpl$10 = template(`<div><div><input type="text" class="searchBox"></div><div></div></div>`, 7),
+      _tmpl$11 = template(`<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png" class="icon_cancel icon_down_dir">`, 1);
 
 var DownArrow = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png';
 var defaultProps = {
@@ -610,38 +612,38 @@ var Multiselect = function Multiselect(props) {
   }
 
   function renderMultiselectContainer() {
-    return function () {
-      var _el$11 = _tmpl$9.cloneNode(true),
-          _el$12 = _el$11.firstChild,
+    return [_tmpl$9.cloneNode(true), function () {
+      var _el$12 = _tmpl$10.cloneNode(true),
           _el$13 = _el$12.firstChild,
-          _el$14 = _el$12.nextSibling;
+          _el$14 = _el$13.firstChild,
+          _el$15 = _el$13.nextSibling;
 
-      setAttribute(_el$11, "id", id || 'multiselectContainerSolid');
+      setAttribute(_el$12, "id", id || 'multiselectContainerSolid');
 
-      addEventListener(_el$12, "click", singleSelect ? toggelOptionList : function () {}, true);
+      addEventListener(_el$13, "click", singleSelect ? toggelOptionList : function () {}, true);
 
       var _ref$ = searchWrapper;
-      typeof _ref$ === "function" ? _ref$(_el$12) : searchWrapper = _el$12;
+      typeof _ref$ === "function" ? _ref$(_el$13) : searchWrapper = _el$13;
 
-      insert(_el$12, renderSelectedList, _el$13);
+      insert(_el$13, renderSelectedList, _el$14);
 
-      _el$13.$$keydown = onArrowKeyNavigation;
+      _el$14.$$keydown = onArrowKeyNavigation;
 
-      _el$13.addEventListener("blur", onBlur);
+      _el$14.addEventListener("blur", onBlur);
 
-      _el$13.addEventListener("focus", onFocus);
+      _el$14.addEventListener("focus", onFocus);
 
-      _el$13.$$input = onInput;
+      _el$14.$$input = onInput;
       var _ref$2 = searchBox;
-      typeof _ref$2 === "function" ? _ref$2(_el$13) : searchBox = _el$13;
+      typeof _ref$2 === "function" ? _ref$2(_el$14) : searchBox = _el$14;
 
-      setAttribute(_el$13, "id", "".concat(id || 'search', "_input"));
+      setAttribute(_el$14, "id", "".concat(id || 'search', "_input"));
 
-      _el$13.disabled = singleSelect || disable;
+      _el$14.disabled = singleSelect || disable;
 
-      insert(_el$12, (singleSelect || showArrow) && _tmpl$10.cloneNode(true), null);
+      insert(_el$13, (singleSelect || showArrow) && _tmpl$11.cloneNode(true), null);
 
-      insert(_el$14, renderOptionList);
+      insert(_el$15, renderOptionList);
 
       effect(function (_p$) {
         var _v$5 = classNames('multiselect-container multiSelectContainer', {
@@ -660,14 +662,14 @@ var Multiselect = function Multiselect(props) {
           displayNone: !toggleOptionsList()
         });
 
-        _v$5 !== _p$._v$5 && (_el$11.className = _p$._v$5 = _v$5);
-        _p$._v$6 = style(_el$11, _v$6, _p$._v$6);
-        _v$7 !== _p$._v$7 && (_el$12.className = _p$._v$7 = _v$7);
-        _p$._v$8 = style(_el$12, _v$8, _p$._v$8);
-        _v$9 !== _p$._v$9 && (_el$13.value = _p$._v$9 = _v$9);
-        _v$10 !== _p$._v$10 && setAttribute(_el$13, "placeholder", _p$._v$10 = _v$10);
-        _p$._v$11 = style(_el$13, _v$11, _p$._v$11);
-        _v$12 !== _p$._v$12 && (_el$14.className = _p$._v$12 = _v$12);
+        _v$5 !== _p$._v$5 && (_el$12.className = _p$._v$5 = _v$5);
+        _p$._v$6 = style(_el$12, _v$6, _p$._v$6);
+        _v$7 !== _p$._v$7 && (_el$13.className = _p$._v$7 = _v$7);
+        _p$._v$8 = style(_el$13, _v$8, _p$._v$8);
+        _v$9 !== _p$._v$9 && (_el$14.value = _p$._v$9 = _v$9);
+        _v$10 !== _p$._v$10 && setAttribute(_el$14, "placeholder", _p$._v$10 = _v$10);
+        _p$._v$11 = style(_el$14, _v$11, _p$._v$11);
+        _v$12 !== _p$._v$12 && (_el$15.className = _p$._v$12 = _v$12);
         return _p$;
       }, {
         _v$5: undefined,
@@ -680,8 +682,8 @@ var Multiselect = function Multiselect(props) {
         _v$12: undefined
       });
 
-      return _el$11;
-    }();
+      return _el$12;
+    }()];
   }
 
   return renderMultiselectContainer();
