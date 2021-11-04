@@ -19,7 +19,7 @@ const yalcPublisher = () =>
         : {};
 
 export default {
-    input: 'index.ts',
+    input: 'src/index.ts',
     external: id => !( id.startsWith( '.' ) || id.startsWith( '/' ) ),
     output: [
         {
