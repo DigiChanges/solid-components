@@ -1,9 +1,14 @@
-import { createEffect, createSignal, mergeProps, splitProps, onMount, Component, For } from 'solid-js';
+import { createEffect, createSignal, mergeProps, splitProps, onMount, Component } from 'solid-js';
+import { For } from 'solid-js/web';
 import classNames from 'classnames';
 import './Multiselect.css';
 
 // const DownArrow = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png';
 const DownArrow = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png';
+
+type Option = {
+    item: Record<string, string | number> | string | number;
+}
 
 const defaultProps = {
     id: '',
@@ -13,41 +18,41 @@ const defaultProps = {
     showArrow: false,
     singleSelect: false,
     style: {},
-    placeholder: 'select'
+    placeholder: 'select',
+    onSelect: () =>
+    {},
+    onRemove: () =>
+    {}
 };
 
 export interface IMultiselectProps {
-    options: any,
-    disablePreSelectedValues?: boolean,
-    selectedValues?: any,
-    isObject?: boolean,
-    displayValue?: string,
-    showCheckbox?: boolean,
-    selectionLimit?: any,
-    placeholder?: string,
-    groupBy?: string,
-    style?: object,
-    emptyRecordMsg?: string,
-    onSelect?: ( selectedList: Option[], selectedItem: Option ) => void,
-    onRemove?: ( selectedList: any, selectedItem: any ) => void,
-    onSearch?: ( value:string ) => void,
-    closeIcon?: string,
-    singleSelect?: boolean,
-    caseSensitiveSearch?: boolean,
-    id?: string,
-    closeOnSelect?: boolean,
-    avoidHighlightFirstOption?: boolean,
-    hidePlaceholder?: boolean,
-    showArrow?: boolean,
-    keepSearchTerm?: boolean,
-    disable?: boolean,
-    loading?: boolean,
-    loadingMessage?: string,
-    customCloseIcon?: any | string
-}
-
-type Option = {
-    item: Record<string, any> | string | number;
+    options: Option[];
+    disablePreSelectedValues?: boolean;
+    selectedValues?: Option[];
+    isObject?: boolean;
+    displayValue?: string;
+    showCheckbox?: boolean;
+    selectionLimit?: number;
+    placeholder?: string;
+    groupBy?: string;
+    style?: object;
+    emptyRecordMsg?: string;
+    onSelect?: ( selectedList: Option[], selectedItem: Option ) => void;
+    onRemove?: ( selectedList: Option[], selectedItem: Option ) => void;
+    onSearch?: ( value:string ) => void;
+    closeIcon?: string;
+    singleSelect?: boolean;
+    caseSensitiveSearch?: boolean;
+    id?: string;
+    closeOnSelect?: boolean;
+    avoidHighlightFirstOption?: boolean;
+    hidePlaceholder?: boolean;
+    showArrow?: boolean;
+    keepSearchTerm?: boolean;
+    disable?: boolean;
+    loading?: boolean;
+    loadingMessage?: string;
+    customCloseIcon?: Element | string;
 }
 
 const closeIconTypes = {
@@ -60,7 +65,7 @@ const closeIconTypes = {
 export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectProps ) =>
 {
     props = mergeProps( defaultProps, props );
-    const [ local, others ] = splitProps( props, [ 'placeholder', 'style', 'singleSelect', 'id', 'hidePlaceholder', 'disable', 'showArrow', 'avoidHighlightFirstOption' ] );
+    const [ local ] = splitProps( props, [ 'placeholder', 'style', 'singleSelect', 'id', 'hidePlaceholder', 'disable', 'showArrow', 'avoidHighlightFirstOption' ] );
     const { placeholder, style, singleSelect, id, hidePlaceholder, disable, showArrow, avoidHighlightFirstOption } = local;
 
     const [ toggleOptionsList, setToggleOptionsList ] = createSignal( false );
@@ -79,7 +84,10 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
     let searchBox: HTMLInputElement;
     const searchWrapper = ( el: HTMLInputElement ) => el.addEventListener( 'click', listenerCallback );
 
-    const renderGroupByOptions = () => <div>not implemented</div>;
+    function renderGroupByOptions ()
+    {
+        return ( <div>not implemented</div> );
+    }
 
     const isSelectedValue = ( item: Option ) =>
     {
@@ -92,7 +100,7 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
         }
         return selectedValues().filter( i => i === item ).length > 0;
     };
-    const fadeOutSelection = ( item: any ) =>
+    const fadeOutSelection = ( item: Option ) =>
     {
         if ( props.singleSelect )
         {
@@ -312,7 +320,7 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
         }
     };
 
-    const renderNormalOption = () =>
+    function renderNormalOption ()
     {
         return (
             <For each={ options() } fallback={
@@ -339,10 +347,11 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
                         )}
                         {props.isObject ? option[props.displayValue] : ( option || '' ).toString()}
                     </li>}
-            </For> );
-    };
+            </For>
+        );
+    }
 
-    const renderOptionList = () =>
+    function renderOptionList ()
     {
         const loadingMessage = props.loadingMessage ?? 'loading...';
         if ( props.loading )
@@ -359,7 +368,7 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
                 {!props.groupBy ? renderNormalOption() : renderGroupByOptions()}
             </ul>
         );
-    };
+    }
 
     const listenerCallback = () =>
     {
@@ -387,7 +396,7 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
 
     const filterOptionsByInput = () =>
     {
-        let newOptions: [];
+        let newOptions: Option[];
         if ( props.isObject )
         {
             newOptions = filteredOptions().filter( i => matchValues( i[props.displayValue], inputValue() ) );
@@ -473,67 +482,75 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
         }
     };
 
-    const renderSelectedList = () => (
-        <For each={selectedValues()} >
-            { ( value ) =>
-                <span
-                    class={classNames( 'chip', {
-                        singleChip: props.singleSelect,
-                        disableSelection: isDisablePreSelectedValues( value )
-                    } )}
-                    style={props.style['chips']}
-                >
-                    {!props.isObject ? ( value || '' ).toString() : value[props.displayValue]}
-                    {!isDisablePreSelectedValues( value ) && ( !props.customCloseIcon ?
-                        <img
-                            class="icon_cancel closeIcon"
-                            src={closeIconType()}
-                            onClick={() => onRemoveSelectedItem( value )}
-                        /> :
-                        <i class="custom-close" onClick={() => onRemoveSelectedItem( value )}>{props.customCloseIcon}</i> )}
-                </span>}
-        </For> );
+    function renderSelectedList ()
+    {
+        return  (
+            <For each={selectedValues()} >
+                { ( value ) =>
+                    <span
+                        class={classNames( 'chip', {
+                            singleChip: props.singleSelect,
+                            disableSelection: isDisablePreSelectedValues( value )
+                        } )}
+                        style={props.style['chips']}
+                    >
+                        {!props.isObject ? ( value || '' ).toString() : value[props.displayValue]}
+                        {!isDisablePreSelectedValues( value ) && ( !props.customCloseIcon ?
+                            <img
+                                class="icon_cancel closeIcon"
+                                src={closeIconType()}
+                                onClick={() => onRemoveSelectedItem( value )}
+                            /> :
+                            <i class="custom-close" onClick={() => onRemoveSelectedItem( value )}>{props.customCloseIcon}</i> )}
+                    </span>}
+            </For>
+        );
+    }
 
-    const renderMultiselectContainer = () => (
-        <div class={classNames( 'multiselect-container multiSelectContainer', { disable_ms : disable } )}
-            id={id || 'multiselectContainerSolid'}
-            style={style['multiselectContainer']}
-        >
-            <div class={classNames( 'search-wrapper searchWrapper', { singleSelect } )}
-                ref={searchWrapper} style={style['searchBox']}
-                onClick={singleSelect ? toggelOptionList : () =>
-                { }}
+    function renderMultiselectContainer ()
+    {
+        return (
+            <div class={classNames( 'multiselect-container multiSelectContainer', { disable_ms : disable } )}
+                id={id || 'multiselectContainerSolid'}
+                style={style['multiselectContainer']}
             >
-                {renderSelectedList()}
-                <input
-                    type="text"
-                    ref={searchBox}
-                    class="searchBox"
-                    id={`${id || 'search'}_input`}
-                    onInput={onInput}
-                    value={inputValue()}
-                    onFocus={onFocus}
-                    onBlur={onBlur}
-                    placeholder={( ( singleSelect && selectedValues().length ) || ( hidePlaceholder && selectedValues().length ) ) ? '' : placeholder}
-                    onKeyDown={onArrowKeyNavigation}
-                    style={style['inputField']}
-                    // autoComplete="off"
-                    disabled={singleSelect || disable}
-                />
-                {( singleSelect || showArrow ) &&
+                <div class={classNames( 'search-wrapper searchWrapper', { singleSelect } )}
+                    ref={searchWrapper} style={style['searchBox']}
+                    onClick={singleSelect ? toggelOptionList : () =>
+                    { }}
+                >
+                    {renderSelectedList()}
+                    <input
+                        type="text"
+                        ref={searchBox}
+                        class="searchBox"
+                        id={`${id || 'search'}_input`}
+                        onInput={onInput}
+                        value={inputValue()}
+                        onFocus={onFocus}
+                        onBlur={onBlur}
+                        placeholder={( ( singleSelect && selectedValues().length ) || ( hidePlaceholder && selectedValues().length ) ) ? '' : placeholder}
+                        onKeyDown={onArrowKeyNavigation}
+                        style={style['inputField']}
+                        // autoComplete="off"
+                        disabled={singleSelect || disable}
+                    />
+                    {( singleSelect || showArrow ) &&
                     <img
                         src={DownArrow}
                         class="icon_cancel icon_down_dir"
                     />
-                }
+                    }
+                </div>
+                <div
+                    class={classNames( 'optionListContainer',  { displayBlock : toggleOptionsList(), displayNone: !toggleOptionsList() } )}
+                >
+                    {renderOptionList()}
+                </div>
             </div>
-            <div
-                class={classNames( 'optionListContainer',  { displayBlock : toggleOptionsList(), displayNone: !toggleOptionsList() } )}
-            >
-                {renderOptionList()}
-            </div>
-        </div>
-    );
+        );
+    }
+
 
     return renderMultiselectContainer();
 };
