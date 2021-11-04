@@ -2,4 +2,4 @@
 // export { default as Icon } from './atoms/Icon';
 
 // Molecules
-export * from './Multiselect/Multiselect';
+export * from './molecules/Multiselect';
