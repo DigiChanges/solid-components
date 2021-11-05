@@ -36,8 +36,7 @@ export default {
         babel( {
             extensions: [ '.ts', '.tsx' ],
             babelHelpers: 'bundled',
-            presets: [ 'solid' ],
-            exclude: 'node_modules/**'
+            presets: [ 'solid' ]
         } ),
         {
             writeBundle ()
