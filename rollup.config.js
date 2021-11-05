@@ -7,6 +7,7 @@ import del from 'rollup-plugin-delete';
 import styles from 'rollup-plugin-styles';
 
 const yalcPublisher = () =>
+    // eslint-disable-next-line no-undef
     process.argv.includes( '--yalc' )
         ? {
             writeBundle: () =>
@@ -26,8 +27,8 @@ export default {
             dir: './dist',
             format: 'es',
             preserveModules: true,
-            entryFileNames: 'es/[name].js'
-            // assetFileNames: '[name]-[hash][extname]'
+            entryFileNames: '[name].js',
+            assetFileNames: '[name]-[hash][extname]'
         }
     ],
     plugins: [
@@ -38,13 +39,13 @@ export default {
             babelHelpers: 'bundled',
             presets: [ 'solid' ]
         } ),
+        styles(),
         {
             writeBundle ()
             {
-                fs.writeFileSync( './dist/src/es/package.json', JSON.stringify( { type: 'module' }, null, '  ' ) );
+                fs.writeFileSync( './dist/src/package.json', JSON.stringify( { type: 'module' }, null, '  ' ) );
             }
         },
-        yalcPublisher(),
-        styles()
+        yalcPublisher()
     ]
 };

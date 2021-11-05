@@ -1,8 +1,6 @@
 import { Component } from 'solid-js';
+import { Option } from '../../types';
 import './Multiselect.css';
-declare type Option = {
-    item: Record<string, string | number> | string | number;
-};
 export interface IMultiselectProps {
     options: Option[];
     disablePreSelectedValues?: boolean;
@@ -33,4 +31,4 @@ export interface IMultiselectProps {
     customCloseIcon?: Element | string;
 }
 export declare const Multiselect: Component<IMultiselectProps>;
-export {};
+export default Multiselect;

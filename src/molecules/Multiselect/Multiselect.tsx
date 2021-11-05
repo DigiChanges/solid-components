@@ -1,14 +1,11 @@
 import { createEffect, createSignal, mergeProps, splitProps, onMount, Component } from 'solid-js';
 import { For } from 'solid-js/web';
 import classNames from 'classnames';
+import { Option } from  '../../types';
 import './Multiselect.css';
 
 // const DownArrow = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png';
 const DownArrow = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png';
-
-type Option = {
-    item: Record<string, string | number> | string | number;
-}
 
 const defaultProps = {
     id: '',
@@ -76,7 +73,9 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
     const [ unfilteredOptions, setUnfilteredOptions ] = createSignal( props.options );
     const [ selectedValues, setSelectedValues ] = createSignal<Option[]>( Object.assign( [], props.selectedValues ) );
     const [ preSelectedValues, setPreSelectedValues ] = createSignal( Object.assign( [], props.selectedValues ) );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [ keepSearchTerm, setKeepSearchTerm ] = createSignal( props.keepSearchTerm );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [ closeIconType, setCloseIconType ] = createSignal( closeIconTypes[props.closeIcon] || closeIconTypes['circle'] );
 
 
@@ -299,11 +298,11 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
             return;
         }
 
-        const newSelectedValues: Option[] = [ ...selectedValues(), item ];
+        const newValuesSelected: Option[] = [ ...selectedValues(), item ];
 
-        props.onSelect( newSelectedValues, item );
+        props.onSelect( newValuesSelected, item );
 
-        setSelectedValues( newSelectedValues );
+        setSelectedValues( newValuesSelected );
 
         if ( !props.showCheckbox )
         {
@@ -511,7 +510,6 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
     {
         return (
             <>
-                <h1>test</h1>
                 <div class={classNames( 'multiselect-container multiSelectContainer', { disable_ms : disable } )}
                     id={id || 'multiselectContainerSolid'}
                     style={style['multiselectContainer']}
@@ -557,3 +555,5 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
 
     return renderMultiselectContainer();
 };
+
+export default Multiselect;

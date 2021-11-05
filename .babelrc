@@ -1,13 +1,5 @@
 {
     "presets": [
-      [
-          "@babel/preset-env",
-          {
-              "targets": {
-                "browsers": ["last 3 versions"]
-              }
-          }
-      ],
       "babel-preset-solid",
       "@babel/preset-typescript"
     ]

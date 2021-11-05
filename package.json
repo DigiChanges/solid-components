@@ -6,11 +6,11 @@
     "type": "git",
     "url": "https://github.com/digichanges/solid-components.git"
   },
-  "module": "./dist/src/es/index.js",
+  "module": "./dist/src/index.js",
   "types": "./dist/src/types/index.d.ts",
   "exports": {
     ".": {
-      "default": "./dist/src/es/index.js"
+      "default": "./dist/src/index.js"
     }
   },
   "engines": {
@@ -28,15 +28,12 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "lint": "eslint --ext ts,tsx --max-warnings 0 --cache src",
-    "prepublishOnly": "yarn build"
+    "lint": "eslint --ext ts,tsx --max-warnings 0 --cache src"
   },
   "author": "DigiChanges <https://www.linkedin.com/company/digichanges>",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.0",
-    "@babel/preset-env": "^7.16.0",
     "@babel/preset-typescript": "^7.16.0",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-typescript": "^8.3.0",
@@ -47,7 +44,6 @@
     "eslint-plugin-solid": "^0.1.2",
     "rollup": "^2.59.0",
     "rollup-plugin-delete": "^2.0.0",
-    "rollup-plugin-import-css": "^3.0.2",
     "rollup-plugin-styles": "^3.14.1",
     "typescript": "^4.4.4"
   },
