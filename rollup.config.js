@@ -23,7 +23,7 @@ export default {
     external: id => !( id.startsWith( '.' ) || id.startsWith( '/' ) ),
     output: [
         {
-            dir: './dist/src',
+            dir: './dist',
             format: 'es',
             preserveModules: true,
             entryFileNames: 'es/[name].js'
@@ -39,6 +39,12 @@ export default {
             presets: [ 'solid' ],
             exclude: 'node_modules/**'
         } ),
+        {
+            writeBundle ()
+            {
+                fs.writeFileSync( './dist/src/es/package.json', JSON.stringify( { type: 'module' }, null, '  ' ) );
+            }
+        },
         yalcPublisher(),
         styles()
     ]
