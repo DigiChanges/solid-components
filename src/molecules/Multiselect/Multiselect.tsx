@@ -16,6 +16,7 @@ const defaultProps = {
     singleSelect: false,
     style: {},
     placeholder: 'select',
+    groupBy: '',
     onSelect: () =>
     {},
     onRemove: () =>
@@ -77,6 +78,7 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
     const [ keepSearchTerm, setKeepSearchTerm ] = createSignal( props.keepSearchTerm );
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [ closeIconType, setCloseIconType ] = createSignal( closeIconTypes[props.closeIcon] || closeIconTypes['circle'] );
+    const [ groupedObject, setGroupedObject ] = createSignal( [] );
 
 
     let optionTimeout: NodeJS.Timeout;
@@ -85,7 +87,44 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
 
     function renderGroupByOptions ()
     {
-        return ( <div>not implemented</div> );
+        const isObject = props.isObject || false;
+        const displayValue = props.displayValue;
+        const showCheckbox = props.showCheckbox;
+        const style = props.style;
+        const singleSelect = props.singleSelect;
+        const groupedObjectKeys  = Object.keys( groupedObject() );
+
+        return (
+            <For each={groupedObjectKeys}>
+                {( objKey ) =>
+                    <>
+                        <li class="groupHeading" style={style['groupHeading']}>{objKey}</li>
+                        <For each={groupedObject()[objKey]}>
+                            {( option: Option ) =>
+                                <li
+                                    style={style['option']}
+                                    class={`
+                                        groupChildEle ${fadeOutSelection( option ) && 'disableSelection'}
+                                        ${isDisablePreSelectedValues( option ) && 'disableSelection'} option
+                                    `}
+                                    onClick={onSelectItem( option )}
+                                >
+                                    {showCheckbox && !singleSelect && (
+                                        <input
+                                            type="checkbox"
+                                            class={'checkbox'}
+                                            readOnly
+                                            checked={isSelectedValue( option )}
+                                        />
+                                    )}
+                                    {isObject ? option[displayValue] : ( option || '' ).toString()}
+                                </li>
+                            }
+                        </For>
+                    </>
+                }
+            </For>
+        );
     }
 
     const isSelectedValue = ( item: Option ) =>
@@ -151,7 +190,7 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
 
         if ( !skipCheck && props.groupBy )
         {
-            // groupByOptions(options());
+            groupByOptions( options() );
         }
         if ( !selectedValues().length && !skipCheck )
         {
@@ -169,7 +208,7 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
             } );
             if ( props.groupBy )
             {
-                // groupByOptions(optionList);
+                groupByOptions( optionList );
             }
             setOptions( optionList );
             setFilteredOptions( optionList );
@@ -201,9 +240,10 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
             removeSelectedValuesFromOptions( false );
         }
 
-        // if (props.groupBy) {
-        //     groupByOptions(options());
-        // }
+        if ( props.groupBy )
+        {
+            groupByOptions( options() );
+        }
     };
 
     createEffect( ( prevOptions ) =>
@@ -374,7 +414,7 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
         searchBox.focus();
     };
 
-    const toggelOptionList = () =>
+    const toggleOptionList = () =>
     {
         setToggleOptionsList( !toggleOptionsList() );
         setHighlightOption( avoidHighlightFirstOption ? -1 : 0 );
@@ -404,8 +444,22 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
         {
             newOptions = filteredOptions().filter( i => matchValues( i, inputValue() ) );
         }
-        // groupByOptions(newOptions);
+        groupByOptions( newOptions );
         setOptions( newOptions );
+    };
+
+    const groupByOptions = ( options ) =>
+    {
+        const groupBy = props.groupBy;
+        const groupedObject = options.reduce( function ( r, a )
+        {
+            const key = a[groupBy] || 'Others';
+            r[key] = r[key] || [];
+            r[key].push( a );
+            return r;
+        }, Object.create( {} ) );
+
+        setGroupedObject( groupedObject );
     };
 
     const onInput = ( event ) =>
@@ -430,13 +484,13 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
         }
         else
         {
-            toggelOptionList();
+            toggleOptionList();
         }
     };
 
     const onBlur = () =>
     {
-        optionTimeout = setTimeout( toggelOptionList, 250 );
+        optionTimeout = setTimeout( toggleOptionList, 250 );
     };
 
     const onArrowKeyNavigation = ( e ) =>
@@ -516,7 +570,7 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
                 >
                     <div class={classNames( 'search-wrapper searchWrapper', { singleSelect } )}
                         ref={searchWrapper} style={style['searchBox']}
-                        onClick={singleSelect ? toggelOptionList : () =>
+                        onClick={singleSelect ? toggleOptionList : () =>
                         { }}
                     >
                         {renderSelectedList()}

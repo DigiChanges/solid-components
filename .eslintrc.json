@@ -20,6 +20,7 @@
         "@typescript-eslint/eslint-plugin",
         "solid"
     ],
+    "ignorePatterns": ["dist/**/*.js"],
     "rules": {
         "solid/jsx-no-undef": 2,
         "indent": [
