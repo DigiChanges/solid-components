@@ -1,0 +1,44 @@
+*, *:before, *:after {
+    margin: 0;
+    padding: 0;
+
+    -webkit-box-sizing: border-box !important;
+    -moz-box-sizing: border-box !important;
+    -ms-box-sizing: border-box !important;
+    box-sizing: border-box !important;
+}
+
+.input-addon-container {
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+}
+
+.input-addon {
+    background-color: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    position: absolute;
+    min-width: 20px;
+    display: inline;
+}
+
+.input-with-prepend {
+    padding-left: 30px;
+}
+
+.input-with-append {
+    padding-right: 30px;
+}
+
+.input-addon.prepend {
+    position: absolute;
+    left: 5px;
+    min-width: 20px;
+}
+
+.input-addon.append {
+    position: absolute;
+    right: 5px;
+    min-width: 20px;
+}
