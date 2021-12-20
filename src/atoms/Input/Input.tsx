@@ -1,4 +1,4 @@
-import { Component, splitProps } from 'solid-js';
+import { Component, mergeProps, splitProps } from 'solid-js';
 import './Input.css';
 import { BasicInputProps } from './Types';
 
@@ -7,8 +7,19 @@ export const handleClick = ( { onClick } ) => ( event ) =>
     onClick( event );
 };
 
+const defaultProps = {
+    id: '',
+    onClick: () =>
+    {},
+    onInput: () =>
+    {},
+    useHandler: (element: HTMLElement, accesor?: () => any) =>
+    {},
+};
+
 export const Input: Component<BasicInputProps> = ( props ) =>
 {
+    props = mergeProps( defaultProps, props );
     const [ local, restOfProps ] = splitProps( props, [ 'onClick', 'useHandler' ] );
     const useHandler = local.useHandler;
 

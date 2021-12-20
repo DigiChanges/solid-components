@@ -1,16 +1,13 @@
 import { JSX } from 'solid-js';
-
-
-export type BasicInputProps = {
+export declare type BasicInputProps = {
     id?: string;
     type?: string;
     placeholder?: string;
     autocomplete?: 'off' | 'on';
-    useHandler?: ( element: HTMLElement, accesor?: () => any ) => void;
+    useHandler?: (element: HTMLElement, accesor?: () => any) => void;
     addon?: {
         prepend?: JSX.Element;
         append?: JSX.Element;
-    } ;
+    };
 } & JSX.HTMLAttributes<HTMLInputElement>;
-
 export default BasicInputProps;
