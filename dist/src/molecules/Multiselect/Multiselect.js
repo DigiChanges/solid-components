@@ -1,5 +1,5 @@
-import { template, delegateEvents, setAttribute, addEventListener, insert, effect, style, memo, createComponent, For } from 'solid-js/web';
-import { mergeProps, splitProps, createSignal, createEffect, onMount } from 'solid-js';
+import { template, delegateEvents, setAttribute, addEventListener, insert, createComponent, effect, style, memo, For } from 'solid-js/web';
+import { mergeProps, splitProps, createSignal, createEffect, onMount, Show } from 'solid-js';
 import classNames from 'classnames';
 import './Multiselect2.js';
 
@@ -12,8 +12,9 @@ const _tmpl$ = template(`<li class="groupHeading"></li>`, 2),
       _tmpl$7 = template(`<span></span>`, 2),
       _tmpl$8 = template(`<img class="icon_cancel closeIcon">`, 1),
       _tmpl$9 = template(`<i class="custom-close"></i>`, 2),
-      _tmpl$10 = template(`<div><div><input type="text" class="searchBox"></div><div></div></div>`, 7),
-      _tmpl$11 = template(`<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png" class="icon_cancel icon_down_dir">`, 1);
+      _tmpl$10 = template(`<input type="text" class="searchBox">`, 1),
+      _tmpl$11 = template(`<div><div></div><div></div></div>`, 6),
+      _tmpl$12 = template(`<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png" class="icon_cancel icon_down_dir">`, 1);
 
 const DownArrow = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png';
 const defaultProps = {
@@ -567,9 +568,8 @@ const Multiselect = props => {
 
   function renderMultiselectContainer() {
     return (() => {
-      const _el$13 = _tmpl$10.cloneNode(true),
+      const _el$13 = _tmpl$11.cloneNode(true),
             _el$14 = _el$13.firstChild,
-            _el$15 = _el$14.firstChild,
             _el$16 = _el$14.nextSibling;
 
       setAttribute(_el$13, "id", id || 'multiselectContainerSolid');
@@ -578,56 +578,73 @@ const Multiselect = props => {
 
       searchWrapper(_el$14);
 
-      insert(_el$14, renderSelectedList, _el$15);
+      insert(_el$14, renderSelectedList, null);
 
-      _el$15.$$keydown = onArrowKeyNavigation;
+      insert(_el$14, createComponent(Show, {
+        when: !singleSelect,
 
-      _el$15.addEventListener("blur", onBlur);
+        get children() {
+          const _el$15 = _tmpl$10.cloneNode(true);
 
-      _el$15.addEventListener("focus", onFocus);
+          _el$15.$$keydown = onArrowKeyNavigation;
 
-      _el$15.$$input = onInput;
-      const _ref$ = searchBox;
-      typeof _ref$ === "function" ? _ref$(_el$15) : searchBox = _el$15;
+          _el$15.addEventListener("blur", onBlur);
 
-      setAttribute(_el$15, "id", `${id || 'search'}_input`);
+          _el$15.addEventListener("focus", onFocus);
 
-      _el$15.disabled = singleSelect || disable;
+          _el$15.$$input = onInput;
+          const _ref$ = searchBox;
+          typeof _ref$ === "function" ? _ref$(_el$15) : searchBox = _el$15;
 
-      insert(_el$14, (singleSelect || showArrow) && _tmpl$11.cloneNode(true), null);
+          setAttribute(_el$15, "id", `${id || 'search'}_input`);
+
+          _el$15.disabled = singleSelect || disable;
+
+          effect(_p$ => {
+            const _v$7 = inputValue(),
+                  _v$8 = singleSelect && selectedValues().length || hidePlaceholder && selectedValues().length ? '' : placeholder,
+                  _v$9 = style$1['inputField'];
+
+            _v$7 !== _p$._v$7 && (_el$15.value = _p$._v$7 = _v$7);
+            _v$8 !== _p$._v$8 && setAttribute(_el$15, "placeholder", _p$._v$8 = _v$8);
+            _p$._v$9 = style(_el$15, _v$9, _p$._v$9);
+            return _p$;
+          }, {
+            _v$7: undefined,
+            _v$8: undefined,
+            _v$9: undefined
+          });
+
+          return _el$15;
+        }
+
+      }), null);
+
+      insert(_el$14, (singleSelect || showArrow) && _tmpl$12.cloneNode(true), null);
 
       insert(_el$16, renderOptionList);
 
       effect(_p$ => {
-        const _v$7 = classNames('multiselect-container multiSelectContainer', {
+        const _v$10 = classNames('multiselect-container multiSelectContainer', {
           disable_ms: disable
         }),
-              _v$8 = style$1['multiselectContainer'],
-              _v$9 = classNames('search-wrapper searchWrapper', {
+              _v$11 = style$1['multiselectContainer'],
+              _v$12 = classNames('search-wrapper searchWrapper', {
           singleSelect
         }),
-              _v$10 = style$1['searchBox'],
-              _v$11 = inputValue(),
-              _v$12 = singleSelect && selectedValues().length || hidePlaceholder && selectedValues().length ? '' : placeholder,
-              _v$13 = style$1['inputField'],
+              _v$13 = style$1['searchBox'],
               _v$14 = classNames('optionListContainer', {
           displayBlock: toggleOptionsList(),
           displayNone: !toggleOptionsList()
         });
 
-        _v$7 !== _p$._v$7 && (_el$13.className = _p$._v$7 = _v$7);
-        _p$._v$8 = style(_el$13, _v$8, _p$._v$8);
-        _v$9 !== _p$._v$9 && (_el$14.className = _p$._v$9 = _v$9);
-        _p$._v$10 = style(_el$14, _v$10, _p$._v$10);
-        _v$11 !== _p$._v$11 && (_el$15.value = _p$._v$11 = _v$11);
-        _v$12 !== _p$._v$12 && setAttribute(_el$15, "placeholder", _p$._v$12 = _v$12);
-        _p$._v$13 = style(_el$15, _v$13, _p$._v$13);
+        _v$10 !== _p$._v$10 && (_el$13.className = _p$._v$10 = _v$10);
+        _p$._v$11 = style(_el$13, _v$11, _p$._v$11);
+        _v$12 !== _p$._v$12 && (_el$14.className = _p$._v$12 = _v$12);
+        _p$._v$13 = style(_el$14, _v$13, _p$._v$13);
         _v$14 !== _p$._v$14 && (_el$16.className = _p$._v$14 = _v$14);
         return _p$;
       }, {
-        _v$7: undefined,
-        _v$8: undefined,
-        _v$9: undefined,
         _v$10: undefined,
         _v$11: undefined,
         _v$12: undefined,

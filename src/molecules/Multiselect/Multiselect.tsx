@@ -1,4 +1,4 @@
-import { createEffect, createSignal, mergeProps, splitProps, onMount, Component } from 'solid-js';
+import { createEffect, createSignal, mergeProps, splitProps, onMount, Component, Show } from 'solid-js';
 import { For } from 'solid-js/web';
 import classNames from 'classnames';
 import { Option } from  '../../types';
@@ -563,17 +563,17 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
     function renderMultiselectContainer ()
     {
         return (
-            <>
-                <div class={classNames( 'multiselect-container multiSelectContainer', { disable_ms : disable } )}
-                    id={id || 'multiselectContainerSolid'}
-                    style={style['multiselectContainer']}
+            <div class={classNames( 'multiselect-container multiSelectContainer', { disable_ms : disable } )}
+                id={id || 'multiselectContainerSolid'}
+                style={style['multiselectContainer']}
+            >
+                <div class={classNames( 'search-wrapper searchWrapper', { singleSelect } )}
+                    ref={searchWrapper} style={style['searchBox']}
+                    onClick={singleSelect ? toggleOptionList : () =>
+                    { }}
                 >
-                    <div class={classNames( 'search-wrapper searchWrapper', { singleSelect } )}
-                        ref={searchWrapper} style={style['searchBox']}
-                        onClick={singleSelect ? toggleOptionList : () =>
-                        { }}
-                    >
-                        {renderSelectedList()}
+                    {renderSelectedList()}
+                    <Show when={!singleSelect}>
                         <input
                             type="text"
                             ref={searchBox}
@@ -589,20 +589,20 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
                             // autoComplete="off"
                             disabled={singleSelect || disable}
                         />
-                        {( singleSelect || showArrow ) &&
+                    </Show>
+                    {( singleSelect || showArrow ) &&
                     <img
                         src={DownArrow}
                         class="icon_cancel icon_down_dir"
                     />
-                        }
-                    </div>
-                    <div
-                        class={classNames( 'optionListContainer',  { displayBlock : toggleOptionsList(), displayNone: !toggleOptionsList() } )}
-                    >
-                        {renderOptionList()}
-                    </div>
+                    }
                 </div>
-            </>
+                <div
+                    class={classNames( 'optionListContainer',  { displayBlock : toggleOptionsList(), displayNone: !toggleOptionsList() } )}
+                >
+                    {renderOptionList()}
+                </div>
+            </div>
         );
     }
 

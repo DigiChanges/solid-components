@@ -52,7 +52,7 @@
     white-space: nowrap;
 }
 
-.singleChip i {
+.singleChip i, .singleChip img {
     display: none;
 }
 
