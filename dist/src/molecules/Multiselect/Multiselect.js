@@ -17,7 +17,6 @@ const _tmpl$ = template(`<li class="groupHeading"></li>`, 2),
 
 const DownArrow = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png';
 const defaultProps = {
-  id: '',
   emptyRecordMsg: 'No records found',
   options: [],
   selectedValues: [],
@@ -26,6 +25,7 @@ const defaultProps = {
   style: {},
   placeholder: 'select',
   groupBy: '',
+  disable: false,
   onSelect: () => {},
   onRemove: () => {}
 };

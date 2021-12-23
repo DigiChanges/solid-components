@@ -7,7 +7,6 @@ import './Multiselect.css';
 const DownArrow = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png';
 
 const defaultProps = {
-    id: '',
     emptyRecordMsg: 'No records found',
     options: [],
     selectedValues: [],
@@ -16,6 +15,7 @@ const defaultProps = {
     style: {},
     placeholder: 'select',
     groupBy: '',
+    disable: false,
     onSelect: () =>
     {},
     onRemove: () =>
@@ -572,7 +572,7 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
     {
         return (
             <div class="multiselect-container multiSelectContainer"
-                classList={{ disable_ms : disable }}
+                classList={{ disable_ms: disable }}
                 id={id || 'multiselectContainerSolid'}
                 style={style['multiselectContainer']}
             >
