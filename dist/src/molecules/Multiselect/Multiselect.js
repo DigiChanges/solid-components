@@ -1,20 +1,19 @@
-import { template, delegateEvents, setAttribute, addEventListener, insert, createComponent, effect, style, memo, For } from 'solid-js/web';
+import { template, delegateEvents, setAttribute, addEventListener, insert, createComponent, effect, style, memo, For, classList } from 'solid-js/web';
 import { mergeProps, splitProps, createSignal, createEffect, onMount, Show } from 'solid-js';
-import classNames from 'classnames';
 import './Multiselect2.js';
 
 const _tmpl$ = template(`<li class="groupHeading"></li>`, 2),
-      _tmpl$2 = template(`<li></li>`, 2),
-      _tmpl$3 = template(`<input type="checkbox" class="checkbox" readonly>`, 1),
+      _tmpl$2 = template(`<input type="checkbox" class="checkbox" readonly>`, 1),
+      _tmpl$3 = template(`<li class="groupChildEle option"></li>`, 2),
       _tmpl$4 = template(`<span class="notFound"></span>`, 2),
       _tmpl$5 = template(`<input type="checkbox" readonly class="checkbox">`, 1),
-      _tmpl$6 = template(`<ul class="optionContainer"></ul>`, 2),
-      _tmpl$7 = template(`<span></span>`, 2),
+      _tmpl$6 = template(`<li class="option"></li>`, 2),
+      _tmpl$7 = template(`<ul class="optionContainer"></ul>`, 2),
       _tmpl$8 = template(`<img class="icon_cancel closeIcon">`, 1),
-      _tmpl$9 = template(`<i class="custom-close"></i>`, 2),
-      _tmpl$10 = template(`<input type="text" class="searchBox">`, 1),
-      _tmpl$11 = template(`<div><div></div><div></div></div>`, 6),
-      _tmpl$12 = template(`<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png" class="icon_cancel icon_down_dir">`, 1);
+      _tmpl$9 = template(`<span class="chip"></span>`, 2),
+      _tmpl$10 = template(`<i class="custom-close"></i>`, 2),
+      _tmpl$11 = template(`<img class="icon_cancel icon_down_dir" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png">`, 1),
+      _tmpl$12 = template(`<div class="multiselect-container multiSelectContainer"><div class="search-wrapper searchWrapper"><input type="text" class="searchBox" autocomplete="off"></div><div class="optionListContainer"></div></div>`, 7);
 
 const DownArrow = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Angle_down_font_awesome.svg/1200px-Angle_down_font_awesome.svg.png';
 const defaultProps = {
@@ -91,28 +90,31 @@ const Multiselect = props => {
         },
 
         children: option => (() => {
-          const _el$2 = _tmpl$2.cloneNode(true);
+          const _el$2 = _tmpl$3.cloneNode(true);
 
           addEventListener(_el$2, "click", onSelectItem(option), true);
 
-          insert(_el$2, showCheckbox && !singleSelect && (() => {
-            const _el$3 = _tmpl$3.cloneNode(true);
+          insert(_el$2, createComponent(Show, {
+            when: showCheckbox && !singleSelect,
 
-            effect(() => _el$3.checked = isSelectedValue(option));
+            get children() {
+              const _el$3 = _tmpl$2.cloneNode(true);
 
-            return _el$3;
-          })(), null);
+              effect(() => _el$3.checked = isSelectedValue(option));
+
+              return _el$3;
+            }
+
+          }), null);
 
           insert(_el$2, () => isObject ? option[displayValue] : (option || '').toString(), null);
 
           effect(_p$ => {
             const _v$ = style$1['option'],
-                  _v$2 = `
-                                        groupChildEle ${fadeOutSelection(option) && 'disableSelection'}
-                                        ${isDisablePreSelectedValues(option) && 'disableSelection'} option
-                                    `;
+                  _v$2 = fadeOutSelection(option) || isDisablePreSelectedValues(option);
+
             _p$._v$ = style(_el$2, _v$, _p$._v$);
-            _v$2 !== _p$._v$2 && (_el$2.className = _p$._v$2 = _v$2);
+            _v$2 !== _p$._v$2 && _el$2.classList.toggle("disableSelection", _p$._v$2 = _v$2);
             return _p$;
           }, {
             _v$: undefined,
@@ -328,37 +330,46 @@ const Multiselect = props => {
       },
 
       children: (option, index) => (() => {
-        const _el$5 = _tmpl$2.cloneNode(true);
+        const _el$5 = _tmpl$6.cloneNode(true);
 
         addEventListener(_el$5, "click", onSelectItem(option), true);
 
-        insert(_el$5, (() => {
-          const _c$ = memo(() => !!(props.showCheckbox && !props.singleSelect), true);
+        insert(_el$5, createComponent(Show, {
+          get when() {
+            return props.showCheckbox && !props.singleSelect;
+          },
 
-          return () => _c$() && (() => {
+          get children() {
             const _el$6 = _tmpl$5.cloneNode(true);
 
             effect(() => _el$6.checked = isSelectedValue(option));
 
             return _el$6;
-          })();
-        })(), null);
+          }
 
-        insert(_el$5, (() => {
-          const _c$2 = memo(() => !!props.isObject, true);
+        }), null);
 
-          return () => _c$2() ? option[props.displayValue] : (option || '').toString();
-        })(), null);
+        insert(_el$5, createComponent(Show, {
+          get when() {
+            return props.isObject;
+          },
+
+          fallback: () => (option || '').toString(),
+
+          get children() {
+            return option[props.displayValue];
+          }
+
+        }), null);
 
         effect(_p$ => {
           const _v$3 = props.style['option'],
-                _v$4 = classNames('option', {
+                _v$4 = {
             'disableSelection': fadeOutSelection(option),
             'highlightOption highlight': highlightOption() === index()
-          });
-
+          };
           _p$._v$3 = style(_el$5, _v$3, _p$._v$3);
-          _v$4 !== _p$._v$4 && (_el$5.className = _p$._v$4 = _v$4);
+          _p$._v$4 = classList(_el$5, _v$4, _p$._v$4);
           return _p$;
         }, {
           _v$3: undefined,
@@ -375,19 +386,23 @@ const Multiselect = props => {
 
     if (props.loading) {
       return (() => {
-        const _el$7 = _tmpl$6.cloneNode(true);
+        const _el$7 = _tmpl$7.cloneNode(true);
 
-        insert(_el$7, typeof loadingMessage === 'string' && (() => {
-          const _el$8 = _tmpl$4.cloneNode(true);
+        insert(_el$7, createComponent(Show, {
+          when: typeof loadingMessage === 'string',
+          fallback: loadingMessage,
 
-          insert(_el$8, loadingMessage);
+          get children() {
+            const _el$8 = _tmpl$4.cloneNode(true);
 
-          effect(_$p => style(_el$8, props.style['loadingMessage'], _$p));
+            insert(_el$8, loadingMessage);
 
-          return _el$8;
-        })(), null);
+            effect(_$p => style(_el$8, props.style['loadingMessage'], _$p));
 
-        insert(_el$7, typeof loadingMessage !== 'string' && loadingMessage, null);
+            return _el$8;
+          }
+
+        }));
 
         effect(_$p => style(_el$7, props.style['optionContainer'], _$p));
 
@@ -396,12 +411,12 @@ const Multiselect = props => {
     }
 
     return (() => {
-      const _el$9 = _tmpl$6.cloneNode(true);
+      const _el$9 = _tmpl$7.cloneNode(true);
 
       insert(_el$9, (() => {
-        const _c$3 = memo(() => !!!props.groupBy, true);
+        const _c$ = memo(() => !!!props.groupBy, true);
 
-        return () => _c$3() ? renderNormalOption() : renderGroupByOptions();
+        return () => _c$() ? renderNormalOption() : renderGroupByOptions();
       })());
 
       effect(_$p => style(_el$9, props.style['optionContainer'], _$p));
@@ -516,49 +531,63 @@ const Multiselect = props => {
       },
 
       children: value => (() => {
-        const _el$10 = _tmpl$7.cloneNode(true);
+        const _el$10 = _tmpl$9.cloneNode(true);
 
         insert(_el$10, (() => {
-          const _c$4 = memo(() => !!!props.isObject, true);
+          const _c$2 = memo(() => !!!props.isObject, true);
 
-          return () => _c$4() ? (value || '').toString() : value[props.displayValue];
+          return () => _c$2() ? (value || '').toString() : value[props.displayValue];
         })(), null);
 
-        insert(_el$10, (() => {
-          const _c$5 = memo(() => !!!isDisablePreSelectedValues(value), true);
+        insert(_el$10, createComponent(Show, {
+          get when() {
+            return !isDisablePreSelectedValues(value);
+          },
 
-          return () => _c$5() && (!props.customCloseIcon ? (() => {
-            const _el$11 = _tmpl$8.cloneNode(true);
+          get children() {
+            return createComponent(Show, {
+              get when() {
+                return !props.customCloseIcon;
+              },
 
-            _el$11.$$click = () => onRemoveSelectedItem(value);
+              fallback: () => (() => {
+                const _el$12 = _tmpl$10.cloneNode(true);
 
-            effect(() => setAttribute(_el$11, "src", closeIconType()));
+                _el$12.$$click = () => onRemoveSelectedItem(value);
 
-            return _el$11;
-          })() : (() => {
-            const _el$12 = _tmpl$9.cloneNode(true);
+                insert(_el$12, () => props.customCloseIcon);
 
-            _el$12.$$click = () => onRemoveSelectedItem(value);
+                return _el$12;
+              })(),
 
-            insert(_el$12, () => props.customCloseIcon);
+              get children() {
+                const _el$11 = _tmpl$8.cloneNode(true);
 
-            return _el$12;
-          })());
-        })(), null);
+                _el$11.$$click = () => onRemoveSelectedItem(value);
+
+                effect(() => setAttribute(_el$11, "src", closeIconType()));
+
+                return _el$11;
+              }
+
+            });
+          }
+
+        }), null);
 
         effect(_p$ => {
-          const _v$5 = classNames('chip', {
-            singleChip: props.singleSelect,
-            disableSelection: isDisablePreSelectedValues(value)
-          }),
-                _v$6 = props.style['chips'];
+          const _v$5 = props.singleSelect,
+                _v$6 = isDisablePreSelectedValues(value),
+                _v$7 = props.style['chips'];
 
-          _v$5 !== _p$._v$5 && (_el$10.className = _p$._v$5 = _v$5);
-          _p$._v$6 = style(_el$10, _v$6, _p$._v$6);
+          _v$5 !== _p$._v$5 && _el$10.classList.toggle("singleChip", _p$._v$5 = _v$5);
+          _v$6 !== _p$._v$6 && _el$10.classList.toggle("disableSelection", _p$._v$6 = _v$6);
+          _p$._v$7 = style(_el$10, _v$7, _p$._v$7);
           return _p$;
         }, {
           _v$5: undefined,
-          _v$6: undefined
+          _v$6: undefined,
+          _v$7: undefined
         });
 
         return _el$10;
@@ -568,9 +597,12 @@ const Multiselect = props => {
 
   function renderMultiselectContainer() {
     return (() => {
-      const _el$13 = _tmpl$11.cloneNode(true),
+      const _el$13 = _tmpl$12.cloneNode(true),
             _el$14 = _el$13.firstChild,
-            _el$16 = _el$14.nextSibling;
+            _el$15 = _el$14.firstChild,
+            _el$17 = _el$14.nextSibling;
+
+      _el$13.classList.toggle("disable_ms", disable);
 
       setAttribute(_el$13, "id", id || 'multiselectContainerSolid');
 
@@ -578,73 +610,55 @@ const Multiselect = props => {
 
       searchWrapper(_el$14);
 
-      insert(_el$14, renderSelectedList, null);
+      _el$14.classList.toggle("singleSelect", singleSelect);
+
+      insert(_el$14, renderSelectedList, _el$15);
+
+      _el$15.$$keydown = onArrowKeyNavigation;
+
+      _el$15.addEventListener("blur", onBlur);
+
+      _el$15.addEventListener("focus", onFocus);
+
+      _el$15.$$input = onInput;
+      const _ref$ = searchBox;
+      typeof _ref$ === "function" ? _ref$(_el$15) : searchBox = _el$15;
+
+      setAttribute(_el$15, "id", `${id || 'search'}_input`);
+
+      _el$15.disabled = singleSelect || disable;
 
       insert(_el$14, createComponent(Show, {
-        when: !singleSelect,
+        when: singleSelect || showArrow,
 
         get children() {
-          const _el$15 = _tmpl$10.cloneNode(true);
-
-          _el$15.$$keydown = onArrowKeyNavigation;
-
-          _el$15.addEventListener("blur", onBlur);
-
-          _el$15.addEventListener("focus", onFocus);
-
-          _el$15.$$input = onInput;
-          const _ref$ = searchBox;
-          typeof _ref$ === "function" ? _ref$(_el$15) : searchBox = _el$15;
-
-          setAttribute(_el$15, "id", `${id || 'search'}_input`);
-
-          _el$15.disabled = singleSelect || disable;
-
-          effect(_p$ => {
-            const _v$7 = inputValue(),
-                  _v$8 = singleSelect && selectedValues().length || hidePlaceholder && selectedValues().length ? '' : placeholder,
-                  _v$9 = style$1['inputField'];
-
-            _v$7 !== _p$._v$7 && (_el$15.value = _p$._v$7 = _v$7);
-            _v$8 !== _p$._v$8 && setAttribute(_el$15, "placeholder", _p$._v$8 = _v$8);
-            _p$._v$9 = style(_el$15, _v$9, _p$._v$9);
-            return _p$;
-          }, {
-            _v$7: undefined,
-            _v$8: undefined,
-            _v$9: undefined
-          });
-
-          return _el$15;
+          return _tmpl$11.cloneNode(true);
         }
 
       }), null);
 
-      insert(_el$14, (singleSelect || showArrow) && _tmpl$12.cloneNode(true), null);
-
-      insert(_el$16, renderOptionList);
+      insert(_el$17, renderOptionList);
 
       effect(_p$ => {
-        const _v$10 = classNames('multiselect-container multiSelectContainer', {
-          disable_ms: disable
-        }),
-              _v$11 = style$1['multiselectContainer'],
-              _v$12 = classNames('search-wrapper searchWrapper', {
-          singleSelect
-        }),
-              _v$13 = style$1['searchBox'],
-              _v$14 = classNames('optionListContainer', {
-          displayBlock: toggleOptionsList(),
-          displayNone: !toggleOptionsList()
-        });
+        const _v$8 = style$1['multiselectContainer'],
+              _v$9 = style$1['searchBox'],
+              _v$10 = inputValue(),
+              _v$11 = singleSelect && selectedValues().length || hidePlaceholder && selectedValues().length ? '' : placeholder,
+              _v$12 = style$1['inputField'],
+              _v$13 = toggleOptionsList(),
+              _v$14 = !toggleOptionsList();
 
-        _v$10 !== _p$._v$10 && (_el$13.className = _p$._v$10 = _v$10);
-        _p$._v$11 = style(_el$13, _v$11, _p$._v$11);
-        _v$12 !== _p$._v$12 && (_el$14.className = _p$._v$12 = _v$12);
-        _p$._v$13 = style(_el$14, _v$13, _p$._v$13);
-        _v$14 !== _p$._v$14 && (_el$16.className = _p$._v$14 = _v$14);
+        _p$._v$8 = style(_el$13, _v$8, _p$._v$8);
+        _p$._v$9 = style(_el$14, _v$9, _p$._v$9);
+        _v$10 !== _p$._v$10 && (_el$15.value = _p$._v$10 = _v$10);
+        _v$11 !== _p$._v$11 && setAttribute(_el$15, "placeholder", _p$._v$11 = _v$11);
+        _p$._v$12 = style(_el$15, _v$12, _p$._v$12);
+        _v$13 !== _p$._v$13 && _el$17.classList.toggle("displayBlock", _p$._v$13 = _v$13);
+        _v$14 !== _p$._v$14 && _el$17.classList.toggle("displayNone", _p$._v$14 = _v$14);
         return _p$;
       }, {
+        _v$8: undefined,
+        _v$9: undefined,
         _v$10: undefined,
         _v$11: undefined,
         _v$12: undefined,

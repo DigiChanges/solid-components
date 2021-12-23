@@ -11,7 +11,6 @@ const handleClick = ({
   onClick(event);
 };
 const defaultProps = {
-  id: '',
   onClick: () => {},
   onInput: () => {},
   useHandler: (element, accesor) => {}

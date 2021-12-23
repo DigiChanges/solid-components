@@ -8,7 +8,6 @@ export const handleClick = ( { onClick } ) => ( event ) =>
 };
 
 const defaultProps = {
-    id: '',
     onClick: () =>
     {},
     onInput: () =>

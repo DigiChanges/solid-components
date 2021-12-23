@@ -1,6 +1,5 @@
 import { createEffect, createSignal, mergeProps, splitProps, onMount, Component, Show } from 'solid-js';
 import { For } from 'solid-js/web';
-import classNames from 'classnames';
 import { Option } from  '../../types';
 import './Multiselect.css';
 
@@ -103,20 +102,18 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
                             {( option: Option ) =>
                                 <li
                                     style={style['option']}
-                                    class={`
-                                        groupChildEle ${fadeOutSelection( option ) && 'disableSelection'}
-                                        ${isDisablePreSelectedValues( option ) && 'disableSelection'} option
-                                    `}
+                                    class="groupChildEle option"
+                                    classList={{ disableSelection: fadeOutSelection( option ) || isDisablePreSelectedValues( option ) }}
                                     onClick={onSelectItem( option )}
                                 >
-                                    {showCheckbox && !singleSelect && (
+                                    <Show when= {showCheckbox && !singleSelect} >
                                         <input
                                             type="checkbox"
-                                            class={'checkbox'}
+                                            class="checkbox"
                                             readOnly
                                             checked={isSelectedValue( option )}
                                         />
-                                    )}
+                                    </Show>
                                     {isObject ? option[displayValue] : ( option || '' ).toString()}
                                 </li>
                             }
@@ -363,28 +360,33 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
     {
         return (
             <For each={ options() } fallback={
-                <span style={props.style['notFound']} class={'notFound'}>
+                <span style={props.style['notFound']} class="notFound">
                     {props.emptyRecordMsg ?? 'No Options Available'}
                 </span>
             }>
                 {( option, index ) =>
                     <li
                         style={props.style['option']}
-                        class={classNames( 'option', {
+                        class= "option"
+                        classList={{
                             'disableSelection': fadeOutSelection( option ),
                             'highlightOption highlight': highlightOption() === index()
-                        } ) }
+                        }}
                         onClick={onSelectItem( option )}
                     >
-                        {props.showCheckbox && !props.singleSelect && (
+                        <Show when={props.showCheckbox && !props.singleSelect}>
                             <input
                                 type="checkbox"
                                 readOnly
                                 class="checkbox"
                                 checked={isSelectedValue( option )}
                             />
-                        )}
-                        {props.isObject ? option[props.displayValue] : ( option || '' ).toString()}
+                        </Show>
+                        <Show when={props.isObject}
+                            fallback={ () => ( option || '' ).toString()}
+                        >
+                            {option[props.displayValue]}
+                        </Show>
                     </li>}
             </For>
         );
@@ -397,8 +399,9 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
         {
             return (
                 <ul class="optionContainer" style={props.style['optionContainer']}>
-                    {typeof loadingMessage === 'string' && <span style={props.style['loadingMessage']} class="notFound">{loadingMessage}</span>}
-                    {typeof loadingMessage !== 'string' && loadingMessage}
+                    <Show when={typeof loadingMessage === 'string'} fallback={loadingMessage}>
+                        <span class="notFound" style={props.style['loadingMessage']}>{loadingMessage}</span>
+                    </Show>
                 </ul>
             );
         }
@@ -541,20 +544,25 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
             <For each={selectedValues()} >
                 { ( value ) =>
                     <span
-                        class={classNames( 'chip', {
+                        class="chip"
+                        classList={{
                             singleChip: props.singleSelect,
                             disableSelection: isDisablePreSelectedValues( value )
-                        } )}
+                        }}
                         style={props.style['chips']}
                     >
                         {!props.isObject ? ( value || '' ).toString() : value[props.displayValue]}
-                        {!isDisablePreSelectedValues( value ) && ( !props.customCloseIcon ?
-                            <img
-                                class="icon_cancel closeIcon"
-                                src={closeIconType()}
-                                onClick={() => onRemoveSelectedItem( value )}
-                            /> :
-                            <i class="custom-close" onClick={() => onRemoveSelectedItem( value )}>{props.customCloseIcon}</i> )}
+                        <Show when={!isDisablePreSelectedValues( value )}>
+                            <Show when={!props.customCloseIcon}
+                                fallback={() => <i class="custom-close" onClick={() => onRemoveSelectedItem( value )}>{props.customCloseIcon}</i>}
+                            >
+                                <img
+                                    class="icon_cancel closeIcon"
+                                    src={closeIconType()}
+                                    onClick={() => onRemoveSelectedItem( value )}
+                                />
+                            </Show>
+                        </Show>
                     </span>}
             </For>
         );
@@ -563,49 +571,45 @@ export const Multiselect: Component<IMultiselectProps> = ( props: IMultiselectPr
     function renderMultiselectContainer ()
     {
         return (
-            <div class={classNames( 'multiselect-container multiSelectContainer', { disable_ms : disable } )}
+            <div class="multiselect-container multiSelectContainer"
+                classList={{ disable_ms : disable }}
                 id={id || 'multiselectContainerSolid'}
                 style={style['multiselectContainer']}
             >
-                <div class={classNames( 'search-wrapper searchWrapper', { singleSelect } )}
+                <div class="search-wrapper searchWrapper"
+                    classList={{ singleSelect }}
                     ref={searchWrapper} style={style['searchBox']}
                     onClick={singleSelect ? toggleOptionList : () =>
                     { }}
                 >
                     {renderSelectedList()}
-                    <Show when={!singleSelect}>
-                        <input
-                            type="text"
-                            ref={searchBox}
-                            class="searchBox"
-                            id={`${id || 'search'}_input`}
-                            onInput={onInput}
-                            value={inputValue()}
-                            onFocus={onFocus}
-                            onBlur={onBlur}
-                            placeholder={( ( singleSelect && selectedValues().length ) || ( hidePlaceholder && selectedValues().length ) ) ? '' : placeholder}
-                            onKeyDown={onArrowKeyNavigation}
-                            style={style['inputField']}
-                            // autoComplete="off"
-                            disabled={singleSelect || disable}
-                        />
-                    </Show>
-                    {( singleSelect || showArrow ) &&
-                    <img
-                        src={DownArrow}
-                        class="icon_cancel icon_down_dir"
+                    <input
+                        type="text"
+                        ref={searchBox}
+                        class="searchBox"
+                        id={`${id || 'search'}_input`}
+                        onInput={onInput}
+                        value={inputValue()}
+                        onFocus={onFocus}
+                        onBlur={onBlur}
+                        placeholder={( ( singleSelect && selectedValues().length ) || ( hidePlaceholder && selectedValues().length ) ) ? '' : placeholder}
+                        onKeyDown={onArrowKeyNavigation}
+                        style={style['inputField']}
+                        autocomplete="off"
+                        disabled={singleSelect || disable}
                     />
-                    }
+                    <Show when={( singleSelect || showArrow )}>
+                        <img class="icon_cancel icon_down_dir" src={DownArrow} />
+                    </Show>
                 </div>
-                <div
-                    class={classNames( 'optionListContainer',  { displayBlock : toggleOptionsList(), displayNone: !toggleOptionsList() } )}
+                <div class="optionListContainer"
+                    classList={{ displayBlock : toggleOptionsList(), displayNone: !toggleOptionsList() }}
                 >
                     {renderOptionList()}
                 </div>
             </div>
         );
     }
-
 
     return renderMultiselectContainer();
 };
