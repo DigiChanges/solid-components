@@ -1,4 +1,4 @@
-import { Component, createSignal, splitProps } from 'solid-js';
+import { Component, createSignal, mergeProps, splitProps } from 'solid-js';
 import { InputFormProps } from '../..';
 import ErrorForm from '../../atoms/ErrorForm/ErrorForm';
 import Icon from '../../atoms/Icon';
@@ -18,8 +18,14 @@ export const handleClick = ( {
     onClick( event );
 };
 
+const defaultProps = {
+    onClick: () =>
+    {}
+};
+
 export const InputFormPassword: Component<InputFormProps> = ( props ) =>
 {
+    props = mergeProps( defaultProps, props );
     const [ local, restOfProps ] = splitProps( props, [ 'onClick', 'labelName', 'labelClass', 'errorChildren' ] );
     const [ getIsShowingPassword, setIsShowingPassword ] = createSignal( false );
 

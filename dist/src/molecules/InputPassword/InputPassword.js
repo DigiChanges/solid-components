@@ -1,5 +1,5 @@
-import { createComponent, mergeProps } from 'solid-js/web';
-import { splitProps, createSignal } from 'solid-js';
+import { createComponent, mergeProps as mergeProps$1 } from 'solid-js/web';
+import { mergeProps, splitProps, createSignal } from 'solid-js';
 import { ErrorForm } from '../../atoms/ErrorForm/ErrorForm.js';
 import { Icon } from '../../atoms/Icon/Icon.js';
 import { IconEye } from '../../atoms/Icons/Stroke/IconEye.js';
@@ -16,7 +16,11 @@ const handleClick = ({
   setIsShowingPassword(!isShowingPassword);
   onClick(event);
 };
+const defaultProps = {
+  onClick: () => {}
+};
 const InputFormPassword = props => {
+  props = mergeProps(defaultProps, props);
   const [local, restOfProps] = splitProps(props, ['onClick', 'labelName', 'labelClass', 'errorChildren']);
   const [getIsShowingPassword, setIsShowingPassword] = createSignal(false);
   return [createComponent(Label, {
@@ -32,7 +36,7 @@ const InputFormPassword = props => {
       return local.labelName;
     }
 
-  }), createComponent(Input, mergeProps({
+  }), createComponent(Input, mergeProps$1({
     get type() {
       return getIsShowingPassword() ? 'text' : 'password';
     },

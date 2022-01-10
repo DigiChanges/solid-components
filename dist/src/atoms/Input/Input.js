@@ -12,13 +12,11 @@ const handleClick = ({
 };
 const defaultProps = {
   onClick: () => {},
-  onInput: () => {},
-  useHandler: (element, accesor) => {}
+  onInput: () => {}
 };
 const Input = props => {
   props = mergeProps(defaultProps, props);
-  const [local, restOfProps] = splitProps(props, ['onClick', 'useHandler']);
-  const useHandler = local.useHandler;
+  const [local, restOfProps] = splitProps(props, ['onClick']);
   return (() => {
     const _el$ = _tmpl$.cloneNode(true),
           _el$2 = _el$.firstChild;
@@ -38,8 +36,6 @@ const Input = props => {
         return _el$3;
       })();
     })(), _el$2);
-
-    useHandler(_el$2, () => true);
 
     spread(_el$2, restOfProps, false, false);
 

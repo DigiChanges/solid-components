@@ -11,16 +11,13 @@ const defaultProps = {
     onClick: () =>
     {},
     onInput: () =>
-    {},
-    useHandler: (element: HTMLElement, accesor?: () => any) =>
-    {},
+    {}
 };
 
 export const Input: Component<BasicInputProps> = ( props ) =>
 {
     props = mergeProps( defaultProps, props );
-    const [ local, restOfProps ] = splitProps( props, [ 'onClick', 'useHandler' ] );
-    const useHandler = local.useHandler;
+    const [ local, restOfProps ] = splitProps( props, [ 'onClick' ] );
 
     return (
         <div class="input-addon-container">
@@ -41,8 +38,6 @@ export const Input: Component<BasicInputProps> = ( props ) =>
                 } )}
                 autocomplete={props.autocomplete ? props.autocomplete : 'on'}
                 type={props.type ?? 'text'}
-                //@ts-ignore
-                use:useHandler // still need to properly type the handler
                 {...restOfProps}
             />
             { props.addon?.append &&
