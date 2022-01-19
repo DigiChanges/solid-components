@@ -3,7 +3,6 @@ import ErrorForm from '../../atoms/ErrorForm/ErrorForm';
 import Input from '../../atoms/Input';
 import Label from '../../atoms/Label/Label';
 import InputFormProps from './Types';
-
 export const handleClick = ( {
     onClick
 } ) => ( event ) =>
@@ -13,24 +12,30 @@ export const handleClick = ( {
 
 export const InputForm: Component<InputFormProps> = ( props ) =>
 {
-    const [ local, restOfProps ] = splitProps( props, [ 'onClick' ] );
+    const [ local, restOfProps ] = splitProps( props, [ 'onClick', 'errorClass', 'labelClass', 'labelName', 'errorChildren' ] );
 
     return (
         <>
             <Label
                 for={props.id}
-                class={props.labelClass}
+                class={local.labelClass}
             >
-                {props.labelName}
+                {local.labelName}
             </Label>
             <Input
                 onClick={handleClick( {
-                    onClick: props.onClick
+                    onClick: local.onClick
                 } )}
-                onInput={props.onInput}
+                // onInput={props.onInput}
                 {...restOfProps}
             />
-            <ErrorForm>{props.errorChildren}</ErrorForm>
+
+            <ErrorForm
+                class={local.errorClass}
+            >
+                {local.errorChildren}
+            </ErrorForm>
+
         </>
     );
 };

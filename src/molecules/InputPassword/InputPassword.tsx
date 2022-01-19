@@ -26,7 +26,7 @@ const defaultProps = {
 export const InputFormPassword: Component<InputFormProps> = ( props ) =>
 {
     props = mergeProps( defaultProps, props );
-    const [ local, restOfProps ] = splitProps( props, [ 'onClick', 'labelName', 'labelClass', 'errorChildren' ] );
+    const [ local, restOfProps ] = splitProps( props, [ 'onClick', 'labelName', 'labelClass', 'errorClass', 'errorChildren' ] );
     const [ getIsShowingPassword, setIsShowingPassword ] = createSignal( false );
 
     return (
@@ -51,7 +51,11 @@ export const InputFormPassword: Component<InputFormProps> = ( props ) =>
                 } )}
                 {...restOfProps}
             />
-            <ErrorForm>{local.errorChildren}</ErrorForm>
+            <ErrorForm
+                class={local.errorClass}
+            >
+                {local.errorChildren}
+            </ErrorForm>
         </>
     );
 };

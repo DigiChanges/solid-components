@@ -10,34 +10,34 @@ const handleClick = ({
   onClick(event);
 };
 const InputForm = props => {
-  const [local, restOfProps] = splitProps(props, ['onClick']);
+  const [local, restOfProps] = splitProps(props, ['onClick', 'errorClass', 'labelClass', 'labelName', 'errorChildren']);
   return [createComponent(Label, {
     get ["for"]() {
       return props.id;
     },
 
     get ["class"]() {
-      return props.labelClass;
+      return local.labelClass;
     },
 
     get children() {
-      return props.labelName;
+      return local.labelName;
     }
 
   }), createComponent(Input, mergeProps({
     get onClick() {
       return handleClick({
-        onClick: props.onClick
+        onClick: local.onClick
       });
-    },
-
-    get onInput() {
-      return props.onInput;
     }
 
   }, restOfProps)), createComponent(ErrorForm, {
+    get ["class"]() {
+      return local.errorClass;
+    },
+
     get children() {
-      return props.errorChildren;
+      return local.errorChildren;
     }
 
   })];
