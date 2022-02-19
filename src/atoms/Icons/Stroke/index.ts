@@ -1,1 +1,4 @@
-export { default, IconEye } from './IconEye';
+import { IconEye } from './IconEye';
+import { IconEyeCrossed } from './IconEyeCrossed';
+
+export default { IconEye, IconEyeCrossed };

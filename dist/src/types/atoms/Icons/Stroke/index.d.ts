@@ -1,1 +1,5 @@
-export { default, IconEye } from './IconEye';
+declare const _default: {
+    IconEye: () => any;
+    IconEyeCrossed: () => any;
+};
+export default _default;
