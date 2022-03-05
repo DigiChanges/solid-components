@@ -1,5 +1,5 @@
 
-export const IconEye = (): any => (
+export const IconEye = () => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

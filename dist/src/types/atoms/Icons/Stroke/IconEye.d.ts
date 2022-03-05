@@ -1,2 +1,2 @@
-export declare const IconEye: () => any;
+export declare const IconEye: () => import("solid-js").JSX.Element;
 export default IconEye;

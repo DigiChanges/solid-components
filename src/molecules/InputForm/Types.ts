@@ -7,6 +7,7 @@ export type InputFormProps = {
     labelClass?: string;
     labelName?: string;
     errorChildren?: JSX.Element;
+    errorClass?: string;
 } & BasicInputProps
 
 export default InputFormProps;
