@@ -20,7 +20,7 @@ const defaultProps = {
 };
 const InputFormPassword = props => {
   props = mergeProps(defaultProps, props);
-  const [local, restOfProps] = splitProps(props, ['onClick', 'labelName', 'labelClass', 'errorChildren']);
+  const [local, restOfProps] = splitProps(props, ['onClick', 'labelName', 'labelClass', 'errorClass', 'errorChildren']);
   const [getIsShowingPassword, setIsShowingPassword] = createSignal(false);
   return [createComponent(Label, {
     get ["for"]() {
@@ -65,6 +65,10 @@ const InputFormPassword = props => {
     }
 
   }, restOfProps)), createComponent(ErrorForm, {
+    get ["class"]() {
+      return local.errorClass;
+    },
+
     get children() {
       return local.errorChildren;
     }

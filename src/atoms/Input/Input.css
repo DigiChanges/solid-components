@@ -25,22 +25,22 @@
 
 .input-with-prepend {
     width: 100%;
-    padding-left: 30px;
+    padding-left: 40px;
 }
 
 .input-with-append {
     width: 100%;
-    padding-right: 30px;
+    padding-right: 40px;
 }
 
 .input-addon.prepend {
     position: absolute;
-    left: 5px;
+    left: 10px;
     min-width: 20px;
 }
 
 .input-addon.append {
     position: absolute;
-    right: 5px;
+    right: 10px;
     min-width: 20px;
 }
