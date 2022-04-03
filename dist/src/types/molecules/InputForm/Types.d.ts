@@ -5,6 +5,7 @@ export declare type InputFormProps = {
     value: string;
     labelClass?: string;
     labelName?: string;
+    hideError?: boolean;
     errorChildren?: JSX.Element;
     errorClass?: string;
 } & BasicInputProps;

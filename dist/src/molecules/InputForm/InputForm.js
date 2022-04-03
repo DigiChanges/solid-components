@@ -1,4 +1,4 @@
-import { createComponent, mergeProps } from 'solid-js/web';
+import { createComponent, mergeProps, memo } from 'solid-js/web';
 import { splitProps } from 'solid-js';
 import { ErrorForm } from '../../atoms/ErrorForm/ErrorForm.js';
 import { Input } from '../../atoms/Input/Input.js';
@@ -10,7 +10,7 @@ const handleClick = ({
   onClick(event);
 };
 const InputForm = props => {
-  const [local, restOfProps] = splitProps(props, ['onClick', 'labelName', 'labelClass', 'errorClass', 'errorChildren']);
+  const [local, restOfProps] = splitProps(props, ['onClick', 'labelName', 'labelClass', 'errorClass', 'errorChildren', 'hideError']);
   return [createComponent(Label, {
     get ["for"]() {
       return props.id;
@@ -31,16 +31,20 @@ const InputForm = props => {
       });
     }
 
-  }, restOfProps)), createComponent(ErrorForm, {
-    get ["class"]() {
-      return local.errorClass;
-    },
+  }, restOfProps)), memo((() => {
+    const _c$ = memo(() => !!!local.hideError, true);
 
-    get children() {
-      return local.errorChildren;
-    }
+    return () => _c$() && createComponent(ErrorForm, {
+      get ["class"]() {
+        return local.errorClass;
+      },
 
-  })];
+      get children() {
+        return local.errorChildren;
+      }
+
+    });
+  })())];
 };
 
 export { InputForm, InputForm as default, handleClick };

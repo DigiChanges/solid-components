@@ -13,7 +13,7 @@ export const handleClick = ( {
 
 export const InputForm: Component<InputFormProps> = ( props ) =>
 {
-    const [ local, restOfProps ] = splitProps( props, [ 'onClick', 'labelName', 'labelClass', 'errorClass', 'errorChildren' ] );
+    const [ local, restOfProps ] = splitProps( props, [ 'onClick', 'labelName', 'labelClass', 'errorClass', 'errorChildren', 'hideError' ] );
 
     return (
         <>
@@ -29,7 +29,7 @@ export const InputForm: Component<InputFormProps> = ( props ) =>
                 } )}
                 {...restOfProps}
             />
-            <ErrorForm class={local.errorClass}>{local.errorChildren}</ErrorForm>
+            {!local.hideError && <ErrorForm class={local.errorClass}>{local.errorChildren}</ErrorForm>}
         </>
     );
 };
