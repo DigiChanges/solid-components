@@ -17,10 +17,10 @@ const defaultProps = {
 export const Input: Component<BasicInputProps> = ( props ) =>
 {
     props = mergeProps( defaultProps, props );
-    const [ local, restOfProps ] = splitProps( props, [ 'onClick' ] );
+    const [ local, restOfProps ] = splitProps( props, [ 'onClick', 'containerClass' ] );
 
     return (
-        <div class="input-addon-container">
+        <div class={`input-addon-container${local.containerClass ? ` ${local.containerClass}` : ''}`}>
             { props.addon?.prepend &&
                 <span
                     class='input-addon prepend'

@@ -2,7 +2,7 @@ import { template, delegateEvents, insert, memo, addEventListener, spread, effec
 import { mergeProps, splitProps } from 'solid-js';
 import './Input2.js';
 
-const _tmpl$ = template(`<div class="input-addon-container"><input></div>`, 3),
+const _tmpl$ = template(`<div><input></div>`, 3),
       _tmpl$2 = template(`<span class="input-addon prepend"></span>`, 2),
       _tmpl$3 = template(`<span class="input-addon append"></span>`, 2);
 const handleClick = ({
@@ -16,7 +16,7 @@ const defaultProps = {
 };
 const Input = props => {
   props = mergeProps(defaultProps, props);
-  const [local, restOfProps] = splitProps(props, ['onClick']);
+  const [local, restOfProps] = splitProps(props, ['onClick', 'containerClass']);
   return (() => {
     const _el$ = _tmpl$.cloneNode(true),
           _el$2 = _el$.firstChild;
@@ -56,21 +56,24 @@ const Input = props => {
     })(), null);
 
     effect(_p$ => {
-      const _v$ = !!props.addon?.prepend,
-            _v$2 = !!props.addon?.append,
-            _v$3 = props.autocomplete ? props.autocomplete : 'on',
-            _v$4 = props.type ?? 'text';
+      const _v$ = `input-addon-container${local.containerClass ? ` ${local.containerClass}` : ''}`,
+            _v$2 = !!props.addon?.prepend,
+            _v$3 = !!props.addon?.append,
+            _v$4 = props.autocomplete ? props.autocomplete : 'on',
+            _v$5 = props.type ?? 'text';
 
-      _v$ !== _p$._v$ && _el$2.classList.toggle("input-with-prepend", _p$._v$ = _v$);
-      _v$2 !== _p$._v$2 && _el$2.classList.toggle("input-with-append", _p$._v$2 = _v$2);
-      _v$3 !== _p$._v$3 && setAttribute(_el$2, "autocomplete", _p$._v$3 = _v$3);
-      _v$4 !== _p$._v$4 && setAttribute(_el$2, "type", _p$._v$4 = _v$4);
+      _v$ !== _p$._v$ && (_el$.className = _p$._v$ = _v$);
+      _v$2 !== _p$._v$2 && _el$2.classList.toggle("input-with-prepend", _p$._v$2 = _v$2);
+      _v$3 !== _p$._v$3 && _el$2.classList.toggle("input-with-append", _p$._v$3 = _v$3);
+      _v$4 !== _p$._v$4 && setAttribute(_el$2, "autocomplete", _p$._v$4 = _v$4);
+      _v$5 !== _p$._v$5 && setAttribute(_el$2, "type", _p$._v$5 = _v$5);
       return _p$;
     }, {
       _v$: undefined,
       _v$2: undefined,
       _v$3: undefined,
-      _v$4: undefined
+      _v$4: undefined,
+      _v$5: undefined
     });
 
     return _el$;
