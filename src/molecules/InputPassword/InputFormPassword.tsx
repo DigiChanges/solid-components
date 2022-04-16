@@ -1,10 +1,12 @@
 import { Component, createSignal, mergeProps, splitProps } from 'solid-js';
-import { InputFormProps, StrokeIcons } from '../..';
 import ErrorForm from '../../atoms/ErrorForm/ErrorForm';
 import Icon from '../../atoms/Icon';
+import IconEye from '../../atoms/Icons/Stroke/IconEye';
+import IconEyeCrossed from '../../atoms/Icons/Stroke/IconEyeCrossed';
 import Input from '../../atoms/Input';
 import Label from '../../atoms/Label/Label';
-import './InputPassword.css';
+import InputFormProps from '../InputForm/Types';
+import './InputFormPassword.css';
 
 export const handleClick = ( {
     onClick,
@@ -39,8 +41,8 @@ export const InputFormPassword: Component<InputFormProps> = ( props ) =>
                 type={getIsShowingPassword() ? 'text' : 'password'}
                 addon={{
                     append: getIsShowingPassword()
-                        ? <Icon  render={StrokeIcons.IconEye} />
-                        : <Icon  render={StrokeIcons.IconEyeCrossed} />
+                        ? <Icon  render={IconEye} />
+                        : <Icon  render={IconEyeCrossed} />
                 }}
                 onClick={handleClick( {
                     onClick: local.onClick,

@@ -2,10 +2,10 @@ import { IconEye } from './IconEye.js';
 import { IconEyeCrossed } from './IconEyeCrossed.js';
 import { IconSearch } from './IconSearch.js';
 
-var StrokeIcons = {
+var index = {
   IconEye,
   IconEyeCrossed,
   IconSearch
 };
 
-export { StrokeIcons as default };
+export { index as default };

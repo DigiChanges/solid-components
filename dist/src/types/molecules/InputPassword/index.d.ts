@@ -1,1 +1,1 @@
-export { default, InputFormPassword } from './InputPassword';
+export { default, InputFormPassword } from './InputFormPassword';

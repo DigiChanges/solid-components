@@ -1,6 +1,6 @@
 import { Component } from 'solid-js';
-import { InputFormProps } from '../..';
-import './InputPassword.css';
+import InputFormProps from '../InputForm/Types';
+import './InputFormPassword.css';
 export declare const handleClick: ({ onClick, isShowingPassword, setIsShowingPassword }: {
     onClick: any;
     isShowingPassword: any;
