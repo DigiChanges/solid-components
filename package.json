@@ -32,6 +32,7 @@
   "scripts": {
     "build": "rollup -c",
     "lint": "eslint --ext ts,tsx --max-warnings 0 --cache src",
+    "lint:fix": "eslint src --fix",
     "prebuild": "rimraf dist",
     "watch:js": "rollup -c --watch"
   },

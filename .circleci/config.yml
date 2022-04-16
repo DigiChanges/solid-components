@@ -1,0 +1,37 @@
+version: 2.1
+
+defaults: &defaults
+  working_directory: ~/circleci
+  docker:
+    - image: cimg/node:16.14
+
+jobs:
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: echo "Running tests"
+      - run: npm install --force
+      - run: npm run ci
+
+  deploy:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/circleci
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/circleci/.npmrc
+      - run:
+          name: Publish package
+          command: npm publish
+
+workflows:
+  version: 2
+  test_build:
+    jobs:
+      - test
+      - deploy:
+          requires:
+            - test
+
