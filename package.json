@@ -1,6 +1,6 @@
 {
   "name": "@digichanges/solid-components",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": false,
   "repository": {
     "type": "git",
@@ -36,7 +36,7 @@
     "prebuild": "rimraf dist",
     "watch:js": "rollup -c --watch",
     "ts:check": "tsc -p tsconfig.json --noEmit",
-    "ci": "npm run ts:check && npm run lint && npm run build"
+    "ci": "npm run ts:check && npm run lint"
   },
   "author": "DigiChanges <https://www.linkedin.com/company/digichanges>",
   "license": "MIT",
